@@ -16,15 +16,15 @@ namespace Microsoft.Bot.Builder.Adapters
     /// <seealso cref="TestFlow"/>
     public class TestAdapter : BotAdapter
     {
+        private readonly bool _sendTraceActivity;
         private object _conversationLock = new object();
         private object _activeQueueLock = new object();
 
         private int _nextId = 0;
-        private readonly bool sendTraceActivity;
 
         public TestAdapter(ConversationReference conversation = null, bool sendTraceActivity = false)
         {
-            this.sendTraceActivity = sendTraceActivity;
+            _sendTraceActivity = sendTraceActivity;
             if (conversation != null)
             {
                 Conversation = conversation;
@@ -131,7 +131,7 @@ namespace Microsoft.Bot.Builder.Adapters
                 }
                 else if (activity.Type == ActivityTypes.Trace)
                 {
-                    if (sendTraceActivity)
+                    if (_sendTraceActivity)
                     {
                         lock (_activeQueueLock)
                         {
